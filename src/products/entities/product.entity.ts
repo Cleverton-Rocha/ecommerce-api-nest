@@ -2,6 +2,17 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Products {
+  constructor(products?: Partial<Products>) {
+    this.id = products?.id;
+    this.name = products?.name;
+    this.description = products?.description;
+    this.image = products?.image;
+    this.price = products?.price;
+    this.texture = products?.texture;
+    this.weight = products?.weight;
+    this.size = products?.size;
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
