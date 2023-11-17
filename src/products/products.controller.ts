@@ -11,8 +11,9 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Products } from './entities/product.entity';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
-@Controller()
+@Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
@@ -23,12 +24,14 @@ export class ProductsController {
     return await this.productsService.createProduct(createProductDto);
   }
 
-  @Get('products')
+  @IsPublic()
+  @Get('all')
   async findProducts(): Promise<Products[]> {
     return await this.productsService.findProducts();
   }
 
-  @Get('products/:id')
+  @IsPublic()
+  @Get('one/:id')
   async findOneProduct(@Param('id') id: number): Promise<Products | object> {
     return await this.productsService.findOneProduct(id);
   }
