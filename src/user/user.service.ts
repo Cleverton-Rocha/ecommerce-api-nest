@@ -54,13 +54,16 @@ export class UserService {
     newUserData: UpdateUserDto,
   ): Promise<User | object> {
     const userToUpdate = await this.userRepository.findOne({ where: { id } });
+
     if (!userToUpdate) {
       return { error: 'user not found' };
     }
 
-    const emailIsUnique = await this.findByEmail(newUserData.email);
-    if (emailIsUnique) {
-      return { error: 'email already in use' };
+    if (userToUpdate.email !== newUserData.email) {
+      const emailIsUnique = await this.findByEmail(newUserData.email);
+      if (emailIsUnique) {
+        return { error: 'email already in use' };
+      }
     }
 
     if (newUserData.password) {
