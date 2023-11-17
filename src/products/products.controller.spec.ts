@@ -91,6 +91,24 @@ describe('ProductsController', () => {
     expect(productsService).toBeDefined();
   });
 
+  describe('createProduct', () => {
+    it('Should create a new product successfully', async () => {
+      const result = await productsController.createProduct(createBody);
+
+      expect(result).toEqual(mockProduct);
+      expect(productsService.createProduct).toHaveBeenCalledTimes(1);
+      expect(productsService.createProduct).toHaveBeenCalledWith(createBody);
+    });
+    it('Should return an error if it cannot complete the promise', () => {
+      jest
+        .spyOn(productsService, 'createProduct')
+        .mockRejectedValueOnce(new Error());
+
+      expect(productsController.createProduct(createBody)).rejects.toThrow(
+        Error,
+      );
+    });
+  });
   describe('findProducts', () => {
     it('Should return a list of products', async () => {
       const result = await productsController.findProducts();
@@ -128,25 +146,6 @@ describe('ProductsController', () => {
     });
   });
 
-  describe('createProduct', () => {
-    it('Should create a new product successfully', async () => {
-      const result = await productsController.createProduct(createBody);
-
-      expect(result).toEqual(mockProduct);
-      expect(productsService.createProduct).toHaveBeenCalledTimes(1);
-      expect(productsService.createProduct).toHaveBeenCalledWith(createBody);
-    });
-    it('Should return an error if it cannot complete the promise', () => {
-      jest
-        .spyOn(productsService, 'createProduct')
-        .mockRejectedValueOnce(new Error());
-
-      expect(productsController.createProduct(createBody)).rejects.toThrow(
-        Error,
-      );
-    });
-  });
-
   describe('updateProduct', () => {
     it('Should update a product for the given id', async () => {
       const productID = 1;
@@ -167,7 +166,7 @@ describe('ProductsController', () => {
       );
 
       expect(result).toEqual(updatedProduct);
-      expect(productsService.updateProduct).toHaveBeenCalledTimes(productID);
+      expect(productsService.updateProduct).toHaveBeenCalledTimes(1);
 
       expect(productsService.updateProduct).toHaveBeenCalledWith(
         productID,
