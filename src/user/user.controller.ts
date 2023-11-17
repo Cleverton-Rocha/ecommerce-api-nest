@@ -28,16 +28,16 @@ export class UserController {
     return await this.userService.findUsers();
   }
 
-  @Delete('delete/:id')
-  async deleteUser(@Param('id') id: number): Promise<User | object> {
-    return await this.userService.deleteUser(id);
-  }
-
   @Put('update/:id')
   async updateUser(
     @Param('id') id: number,
     @Body() newUserData: UpdateUserDto,
   ): Promise<User | object> {
     return await this.userService.updateUser(id, newUserData);
+  }
+
+  @Delete('delete/:id')
+  async deleteUser(@Param('id') id: number): Promise<User | object> {
+    return await this.userService.deleteUser(id);
   }
 }
