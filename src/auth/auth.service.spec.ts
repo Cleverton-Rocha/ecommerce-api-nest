@@ -83,6 +83,7 @@ describe('AuthService', () => {
       };
 
       jest.spyOn(userService, 'findByEmail').mockResolvedValue(mockUser);
+
       jest
         .spyOn(bcrypt, 'compare')
         .mockImplementation(() => Promise.resolve(true));
