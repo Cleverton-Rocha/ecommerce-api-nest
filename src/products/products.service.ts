@@ -42,7 +42,7 @@ export class ProductsService {
       return { error: 'product not found' };
     }
 
-    Object.assign(productToUpdate, newData);
+    this.productsRepository.merge(productToUpdate, newData);
     await this.productsRepository.save(productToUpdate);
 
     return productToUpdate;
