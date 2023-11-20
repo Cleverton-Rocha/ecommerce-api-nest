@@ -28,6 +28,7 @@ export class UserService {
     });
     return this.userRepository.save(newUser);
   }
+
   async findUsers(): Promise<User[] | undefined> {
     return this.userRepository.find({
       order: { id: 'ASC' },
@@ -36,17 +37,6 @@ export class UserService {
 
   async findByEmail(email: string): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { email } });
-  }
-
-  async deleteUser(id: number): Promise<User | object> {
-    const userToDelete = await this.userRepository.findOne({ where: { id } });
-
-    if (!userToDelete) {
-      return { error: 'user not found' };
-    }
-
-    await this.userRepository.remove(userToDelete);
-    return userToDelete;
   }
 
   async updateUser(
@@ -68,11 +58,25 @@ export class UserService {
 
     if (newUserData.password) {
       const hashedPassword = await bcrypt.hash(newUserData.password, 10);
-      Object.assign(userToUpdate, { ...newUserData, password: hashedPassword });
+      this.userRepository.merge(userToUpdate, {
+        ...newUserData,
+        password: hashedPassword,
+      });
     } else {
-      Object.assign(userToUpdate, newUserData);
+      this.userRepository.merge(userToUpdate, newUserData);
     }
     await this.userRepository.save(userToUpdate);
     return userToUpdate;
+  }
+
+  async deleteUser(id: number): Promise<User | object> {
+    const userToDelete = await this.userRepository.findOne({ where: { id } });
+
+    if (!userToDelete) {
+      return { error: 'user not found' };
+    }
+
+    await this.userRepository.remove(userToDelete);
+    return userToDelete;
   }
 }
