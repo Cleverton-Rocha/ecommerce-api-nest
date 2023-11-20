@@ -56,6 +56,7 @@ describe('ProductsService', () => {
             find: jest.fn().mockResolvedValue(productsList),
             findOne: jest.fn().mockResolvedValue(mockProduct),
             merge: jest.fn().mockReturnValue(mockProduct),
+            remove: jest.fn().mockResolvedValue(mockProduct),
           },
         },
       ],
@@ -192,6 +193,24 @@ describe('ProductsService', () => {
       expect(productsService.findOneProduct(productID)).rejects.toThrow(
         'product not found',
       );
+    });
+  });
+
+  describe('deleteProduct', () => {
+    it('Should delete one product for the given id', async () => {
+      const productID = 1;
+
+      const result = await productsService.deleteProduct(productID);
+
+      expect(productsRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(productsRepository.findOne).toHaveBeenCalledWith({
+        where: { id: productID },
+      });
+
+      expect(productsRepository.remove).toHaveBeenCalledTimes(1);
+      expect(productsRepository.remove).toHaveBeenCalledWith(mockProduct);
+
+      expect(result).toEqual(mockProduct);
     });
   });
 });
